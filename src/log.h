@@ -29,7 +29,7 @@
 #endif
 
 #define LOG_PRINT(priority, level, format, ...) do {\
-    log_print(priority, "Saferun " level ": " format "\n", ##__VA_ARGS__); \
+    log_print(priority, "Markov " level ": " format "\n", ##__VA_ARGS__); \
 } while (0)
 
 #define TRACE(format, ...) LOG_PRINT(MARKOV_LOG_TRACE, "TRACE", "%s:%d in %s - " format, __FILE__, __LINE__, __func__, ##__VA_ARGS__)

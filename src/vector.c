@@ -15,15 +15,18 @@
  */
 
 #include <stdlib.h>
+
+#include "log.h"
 #include "vector.h"
 
 /*
  * TODO: add documentation and add more error checks on memory allocation
+ * add fini functions
  */
 
-vector_t *vector_init(vector_t *vector, int type_size)
+vector_t *vector_init(int type_size)
 {
-    vector = malloc(sizeof(vector_t));
+    vector_t *vector = malloc(sizeof(vector_t));
     vector->data = NULL;
     vector->size = vector->capacity = 0;
 
@@ -37,11 +40,36 @@ void vector_inc_size(vector_t *vector)
     
     vector->size += 1;
     
-    if (!vector->capacity)
-        vector->capacity = 1;
+    if (vector->capacity < vector->size) {
+        if (!vector->capacity)
+            vector->capacity = 1;
+        else
+            vector->capacity *= 2;
+        if (vector->capacity > 100)
+            DEBUG("resize to %d elems, %d bytes of memory", vector->capacity, (vector->capacity) * (vector->type_size));
+        vector->data = realloc(vector->data, (vector->capacity) * (vector->type_size));
+    }
 
-    if (vector->capacity < vector->size)
-        vector->capasity *= 2;
-    
-    vector->data = realloc(vector->data, vector->capacity);
+}
+
+vector_t *vector_init_int()
+{
+    return vector_init(sizeof(int));
+}
+
+vector_t *vector_init_str()
+{
+    return vector_init(sizeof(char *));
+}
+
+void vector_pb_int(vector_t *v, int i)
+{
+    vector_inc_size(v);
+    V_INT(v)[v->size - 1] = i;
+}
+
+void vector_pb_str(vector_t *v, char *s)
+{
+    vector_inc_size(v);
+    V_STR(v)[v->size - 1] = s;
 }

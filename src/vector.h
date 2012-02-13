@@ -17,8 +17,8 @@
 #ifndef _VECTOR_H
 #define _VECTOR_H
 
-#define V_INT(a) ((int *)( (a).data ))
-#define V_STR(a) ((char **)( (a).data ))
+#define V_INT(a) ((int *)  ( ((vector_t *)(a))->data ))
+#define V_STR(a) ((char **)( ((vector_t *)(a))->data ))
 
 typedef struct vector_t {
     int type_size;
@@ -26,6 +26,15 @@ typedef struct vector_t {
     int capacity;
     void *data;
 } vector_t;
+
+vector_t *vector_init(int type_size);
+void vector_inc_size(vector_t *vector);
+
+vector_t *vector_init_int();
+vector_t *vector_init_str();
+
+void vector_pb_int(vector_t *v, int i);
+void vector_pb_str(vector_t *v, char *s);
 
 #endif /*_VECTOR_H*/
 

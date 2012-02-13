@@ -20,12 +20,9 @@
 #include <string.h>
 
 #include "log.h"
-
-#define IS_DELIMETER(c) ((c) == ' ' || (c) == '\t' || (c) == '\n')
-
-#define MAX_WORD_LEN 100
-static const int DEFAULT_PREFIX_LEN = 2;
-static const int MAX_PREFIX_LEN = 10;
+#include "vector.h"
+#include "wordreader.h"
+#include "preftable.h"
 
 int prefix_len;
 
@@ -49,57 +46,66 @@ inline void parse_cmdl_arguments(int argc, char **argv)
         prefix_len = DEFAULT_PREFIX_LEN;
     }
 }
-/*
- * parse_word() - reads input and returns string containing one word
- *
- * Returns NULL if reaches the end of input.
- * You must free memory allocated by this function when you don`t need it anymore.
- */
-char *parse_word()
-{
-    static char s[MAX_WORD_LEN];
-    int l = 0;
-    int c;
-    do {
-        c = fgetc(stdin);
-    } while ( c != EOF && IS_DELIMETER(c) );
 
-    if (c == EOF)
-        return NULL;
-
-    while ( c != EOF && !IS_DELIMETER(c)) {
-        s[l++] = c;
-        if (l >= MAX_WORD_LEN)
-            break;
-        c = fgetc(stdin);
-    }
-
-    char *result = (char *) malloc((l+1) * sizeof(char));
-    memcpy(result, s, l);
-    result[l] = '\0';
-    return result;
-}
-
-int read_word()
-{
-    char *w = parse_word();
-
-}
-
+state_t start_state;
 void parse_input()
 {
-    char *t;
-    t = parse_word();
-    while (t != NULL) {
-        DEBUG("%s", t);
-        t = parse_word();
+    state_t state;
+    int i;
+
+    for (i = 0; i < prefix_len; ++i) {
+        state.x[i] = read_word();
+        if (state.x[i] < 1) {
+            ERROR("Need more words");
+            exit(1);
+        }
+    }
+    
+    start_state = state;
+
+    int suffix = read_word();
+    while (suffix > 0) {
+        add_state(state, suffix);
+        for (i = 0; i < prefix_len - 1; ++i)
+            state.x[i] = state.x[i + 1];
+        state.x[prefix_len - 1] = suffix;
+        suffix = read_word();
+    }
+}
+
+void gen_output() 
+{
+    state_t state = start_state;
+    int i, k;
+
+    for (i = 0; i < prefix_len; ++i) {
+        printf("%d %d %s\n", -1, state.x[i], get_word(state.x[i]));
+    }
+
+    for (k = 0; k < 100; ++k) {
+        vector_t *v = get_suffixes(state);
+        if (!v) break;
+        int rand_item = abs(rand()*RAND_MAX + rand()) % v->size;
+        int w = V_INT(v)[rand_item];
+        printf("%d %d %s\n", rand_item, w, get_word(w));
+
+        for (i = 0; i < prefix_len - 1; ++i)
+            state.x[i] = state.x[i + 1];
+        state.x[prefix_len - 1] = w;
     }
 }
 
 int main(int argc, char **argv)
 {
+//    freopen("../../tests/01.tst", "r", stdin);
     parse_cmdl_arguments(argc, argv);
+    wordreader_init();
+    preftable_init(prefix_len);
     parse_input();
+
+    //show_table();
+
+    gen_output();
 
     return 0;
 }
