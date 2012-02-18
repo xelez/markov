@@ -14,6 +14,9 @@
  *  limitations under the License.
  */
 
+/* No debug output */
+#define NO_TRACE_OUTPUT
+
 #include <stdlib.h>
 
 #include "log.h"
@@ -27,9 +30,8 @@
 vector_t *vector_init(int type_size)
 {
     vector_t *vector = malloc(sizeof(vector_t));
-    vector->data = NULL;
-    vector->size = vector->capacity = 0;
-
+    memset(vector, 0, sizeof(vector_t));
+    
     vector->type_size = type_size;
     return vector;
 }
@@ -38,18 +40,19 @@ void vector_inc_size(vector_t *vector)
 {
     if (!vector) return;
     
-    vector->size += 1;
+    ++(vector->size);
     
     if (vector->capacity < vector->size) {
         if (!vector->capacity)
             vector->capacity = 1;
         else
             vector->capacity *= 2;
+
         if (vector->capacity > 100)
-            DEBUG("resize to %d elems, %d bytes of memory", vector->capacity, (vector->capacity) * (vector->type_size));
+            TRACE("resize to %d elems, %d bytes of memory", vector->capacity, (vector->capacity) * (vector->type_size));
+        
         vector->data = realloc(vector->data, (vector->capacity) * (vector->type_size));
     }
-
 }
 
 vector_t *vector_init_int()

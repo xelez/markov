@@ -20,11 +20,16 @@
 #define V_INT(a) ((int *)  ( ((vector_t *)(a))->data ))
 #define V_STR(a) ((char **)( ((vector_t *)(a))->data ))
 
+/**
+ * vector_t - Динамический массив
+ *
+ * Умеет расширятся, и хранить произвольный тип.
+ */
 typedef struct vector_t {
-    int type_size;
-    int size;
-    int capacity;
-    void *data;
+    int type_size;  /**< Размер типа, хранящегося в массиве, например sizeof(int). */
+    int size;       /**< Количество элементов в массиве. */
+    int capacity;   /**< Количество элементов, которе может вмещать массив. */
+    void *data;     /**< Указатель на блок с данными, выделяется realloc`ом */
 } vector_t;
 
 vector_t *vector_init(int type_size);
