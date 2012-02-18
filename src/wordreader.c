@@ -23,9 +23,10 @@
 #include "htable.h"
 #include "wordreader.h"
 
-#define IS_DELIMETER(c) ((c) == ' ' || (c) == '\t' || (c) == '\n')
 #define MAX_WORD_LEN 100
+#define MAX_WORD_LEN_S "100"
 #define MAX_WORD_K (10*1000*1000)
+#define SCANF_FMT "%" MAX_WORD_LEN_S "s"
 
 static htable_data _mem[MAX_WORD_K];
 vector_t *words;
@@ -40,35 +41,20 @@ void wordreader_init()
     word_num = htable_init(MAX_WORD_K, _mem, &htable_hash_str, &htable_equal_str);
 }
 
-/*
- * parse_word() - reads input and returns string containing one word
+/**
+ * parse_word - reads input and returns string containing one word
  *
  * Returns NULL if reaches the end of input.
  * You must free memory allocated by this function when you don`t need it anymore.
  */
 char *parse_word()
 {
-    static char s[MAX_WORD_LEN];
-    int l = 0;
-    int c;
-    do {
-        c = fgetc(stdin);
-    } while ( c != EOF && IS_DELIMETER(c) );
+    static char buff[MAX_WORD_LEN+1];
 
-    if (c == EOF)
+    if (fscanf(stdin, SCANF_FMT, buff) == 1)
+        return strdup(buff);
+    else
         return NULL;
-
-    while ( c != EOF && !IS_DELIMETER(c)) {
-        s[l++] = c;
-        if (l >= MAX_WORD_LEN)
-            break;
-        c = fgetc(stdin);
-    }
-
-    char *result = (char *) malloc((l + 1) * sizeof(char));
-    memcpy(result, s, l);
-    result[l] = '\0';
-    return result;
 }
 
 int read_word()
@@ -78,6 +64,7 @@ int read_word()
         return -1;
 
     htable_data *d = htable_find(word_num, w);
+   
     if (d->key) {
         free(w);
         return INT(d->data);
@@ -91,7 +78,7 @@ int read_word()
     }
 }
 
-char *get_word(int num)
+inline char *get_word(int num)
 {
     return V_STR(words)[num];
 }

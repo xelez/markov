@@ -17,11 +17,8 @@
 #ifndef _WORDREADER_H
 #define _WORDREADER_H
 
-#include "vector.h"
-
 void wordreader_init();
-char *parse_word();
 int read_word();
-char *get_word(int num);
+inline char *get_word(int num);
 #endif /*_WORDREADER_H*/
 
