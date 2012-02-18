@@ -19,20 +19,25 @@
 
 #define INT(a) ( *((int *)(a)) )
 
+/** Тип ф-ии для сравнения ключей */
 typedef int ( *key_equal_func ) (void *, void *);
+
+/** Тип ф-ии для хешерования ключа */
 typedef int ( *hash_key_func ) (void *);
 
+/** Строка хеш-таблицы */
 typedef struct htable_data {
-    void *key;
-    void *data;
+    void *key;  /**< указатель на ключ */
+    void *data; /**< указатель на значение */
 } htable_data;
 
+/** Хеш-таблица */
 typedef struct htable_t {
-    htable_data *data;
-    int size;
+    htable_data *data; /**< указатель на массив строк хеш-таблицы */
+    int size;          /**< размер таблицы */
     
-    hash_key_func  hash_key;
-    key_equal_func key_equal;
+    hash_key_func  hash_key;  /**< ф-ия хеширования ключа */
+    key_equal_func key_equal; /**< ф-ия сравнения двух ключей */
 } htable_t;
 
 int htable_hash_str(void *key);

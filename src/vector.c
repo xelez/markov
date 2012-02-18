@@ -22,11 +22,6 @@
 #include "log.h"
 #include "vector.h"
 
-/*
- * TODO: add documentation and add more error checks on memory allocation
- * add fini functions
- */
-
 vector_t *vector_init(int type_size)
 {
     vector_t *vector = malloc(sizeof(vector_t));
