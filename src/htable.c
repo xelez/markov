@@ -58,7 +58,7 @@ int htable_equal_str(void *key1, void *key2)
  * @param size размер хеш-таблицы, желательно брать примерно 2*N,
  *             где N - максимально возможное количество элементов в хеш-таблице
  *
- * @param data указатель на массив для хранения данных,
+ * @param data указатель на заполненный нулями массив для хранения данных,
  *             если NULL, то память будет выделенна автоматически.
  * 
  * @param hash_key ф-ия для хеширования ключей
@@ -72,10 +72,8 @@ htable_t* htable_init(int size, htable_data *data,
 {
     htable_t *htable = malloc(sizeof(htable_t));
 
-    if (!data) {
-        data = (htable_data *) malloc(sizeof(htable_data) * size);
-    }
-    memset(data, 0, sizeof(htable_data) * size);
+    if (!data)
+        data = calloc(size, sizeof(htable_data));
 
     htable->size = size;
     htable->data = data;
