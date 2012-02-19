@@ -35,11 +35,11 @@ typedef struct vector_t {
 vector_t *vector_init(int type_size);
 void vector_inc_size(vector_t *vector);
 
-vector_t *vector_init_int();
-vector_t *vector_init_str();
+inline vector_t *vector_init_int();
+inline vector_t *vector_init_str();
 
-void vector_pb_int(vector_t *v, int i);
-void vector_pb_str(vector_t *v, char *s);
+inline void vector_pb_int(vector_t *v, int i);
+inline void vector_pb_str(vector_t *v, char *s);
 
 #endif /*_VECTOR_H*/
 

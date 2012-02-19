@@ -22,15 +22,23 @@
 #include "log.h"
 #include "vector.h"
 
+/**
+ * Создать новый динамический массив, хранящий тип размером
+ * в type_size байт.
+ *
+ * @return указатель на новый vector_t
+ */
 vector_t *vector_init(int type_size)
 {
-    vector_t *vector = malloc(sizeof(vector_t));
-    memset(vector, 0, sizeof(vector_t));
+    vector_t *vector = calloc(1, sizeof(vector_t));
     
     vector->type_size = type_size;
     return vector;
 }
 
+/**
+ * Увеличить размер динамического массива на единицу.
+ */
 void vector_inc_size(vector_t *vector)
 {
     if (!vector) return;
@@ -41,32 +49,31 @@ void vector_inc_size(vector_t *vector)
         if (!vector->capacity)
             vector->capacity = 1;
         else
-            vector->capacity *= 2;
+            vector->capacity <<= 1; // *= 2
 
-        if (vector->capacity > 100)
-            TRACE("resize to %d elems, %d bytes of memory", vector->capacity, (vector->capacity) * (vector->type_size));
-        
+        TRACE("resize to %d elems, %d bytes of memory", vector->capacity, (vector->capacity) * (vector->type_size));
+
         vector->data = realloc(vector->data, (vector->capacity) * (vector->type_size));
     }
 }
 
-vector_t *vector_init_int()
+inline vector_t *vector_init_int()
 {
     return vector_init(sizeof(int));
 }
 
-vector_t *vector_init_str()
+inline vector_t *vector_init_str()
 {
     return vector_init(sizeof(char *));
 }
 
-void vector_pb_int(vector_t *v, int i)
+inline void vector_pb_int(vector_t *v, int i)
 {
     vector_inc_size(v);
     V_INT(v)[v->size - 1] = i;
 }
 
-void vector_pb_str(vector_t *v, char *s)
+inline void vector_pb_str(vector_t *v, char *s)
 {
     vector_inc_size(v);
     V_STR(v)[v->size - 1] = s;
