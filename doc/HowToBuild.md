@@ -1,11 +1,7 @@
 # Linux
 
 ## Сборка на Linux
-Нужны:
- * git
- * cmake
- * make
- * GCC
+Нужны: git, cmake, make, GCC
 
     git clone git clone https://github.com/xelez/markov.git
     cd markov
@@ -15,9 +11,7 @@
     make
 
 ## Генерация документации
-Нужны:
- * doxygen
- * graphviz
+Нужны: doxygen, graphviz
 
     cd markov
     doxygen
@@ -26,16 +20,17 @@
 
 # Windows
 
-## Ссылки
- * [Установщик CMake]()
- * [Установщик Doxygen]()
- * []
+## Ссылки на нужные программы
+ * [CMake](http://www.cmake.org/cmake/resources/software.html)
+ * [Doxygen](http://www.stack.nl/~dimitri/doxygen/download.html#latestsrc)
+ * [Graphviz](http://www.graphviz.org/Download_windows.php)
+ * Какой-нибудь компилятор, например [MinGW](http://www.mingw.org/wiki/Getting_Started)
 
 # Сборка
  1. Получаем исходники с github`а любым способом, например на странице проэкта есть кнопочка ZIP,
     с помощью которой можно скачать архив с исходниками
  
  2. Разархивируем этот архив
- 3. Последующие шаги будут позже.. =)
+ 3. Последующие шаги будут позже.. =) (когда под рукой будет Windows)
 
 # Генерация документаци
