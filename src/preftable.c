@@ -34,14 +34,6 @@ const long long rand_num[] = {493840333, 281988407, 772593566, 640102565, 514641
                               355095385, 625786523, 21391585, 446742882, 571804125,
                               236016505, 535442116, 56480838, 572320172, 243967492};
 
-void show_state(state_t *state, FILE *f)
-{
-    fprintf(f, "state: ");
-    int j;
-    for (j = 0; j < prefix_len; ++j)
-        fprintf(f, "%d ", state->x[j]);
-}
-
 static int hash_state(void *key)
 {
     long long hash = 0;
@@ -56,8 +48,8 @@ static int hash_state(void *key)
 
 static int equal_state(void *key1, void *key2)
 {
-    state_t *a = (state_t *)key1;
-    state_t *b = (state_t *)key2;
+    const state_t *a = (state_t *)key1;
+    const state_t *b = (state_t *)key2;
     
     int i;
     for (i = 0; i < prefix_len; ++i)
@@ -72,29 +64,37 @@ void preftable_init(int prefix_length)
     prefix_table = htable_init(MAX_PREFIX_COUNT, _mem, &hash_state, &equal_state);
 }
 
-void add_state(state_t state, int suffix)
+void add_state(state_t *state, int suffix)
 {
-    htable_data *data = htable_find(prefix_table, &state);
+    htable_data *data = htable_find(prefix_table, state);
+
     if (!(data->key)) {
         data->key = malloc(sizeof(state_t));
-        memcpy(data->key, &state, sizeof(state_t));
+        memcpy(data->key, state, sizeof(state_t));
         data->data = vector_init_int();
     }
-
 
     vector_pb_int((vector_t *)(data->data), suffix);
 }
 
-vector_t *get_suffixes(state_t state)
+inline vector_t *get_suffixes(state_t *state)
 {
-    htable_data *data = htable_find(prefix_table, &state);
+    htable_data *data = htable_find(prefix_table, state);
     return (vector_t *)(data->data);
+}
+
+void show_state(state_t *state, FILE *f)
+{
+    fprintf(f, "state: ");
+    int j;
+    for (j = 0; j < prefix_len; ++j)
+        fprintf(f, "%d ", state->x[j]);
 }
 
 void show_table()
 {
     htable_data *d = prefix_table->data;
-    int size = prefix_table->size;
+    const int size = prefix_table->size;
     int i, j;
 
     for (i = 0; i < size; ++i) {

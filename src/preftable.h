@@ -21,16 +21,13 @@
 
 #define MAX_PREFIX_COUNT (10*1000*1000)
 #define MAX_PREFIX_LEN 10
-#define DEFAULT_PREFIX_LEN 2
 
 typedef struct state_t {
     int x[MAX_PREFIX_LEN];
 } state_t;
 
 void preftable_init(int prefix_length);
-void add_state(state_t state, int suffix);
-vector_t *get_suffixes(state_t state);
-
-void show_state(state_t *state, FILE *f);
+void add_state(state_t *state, int suffix);
+inline vector_t *get_suffixes(state_t *state);
 
 #endif /* _PREFTABLE_H */
