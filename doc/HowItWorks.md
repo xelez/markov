@@ -54,7 +54,7 @@
 Единственное о чём нужно заботиться - это об отдельных переменных для количества элементов в массиве
 и для его реальной длины.
 
-## ссылки
+## Cсылки
  * <http://en.wikipedia.org/wiki/Jenkins_hash_function>
  * <http://algolist.manual.ru/ds/s_has.php>
  
