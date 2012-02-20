@@ -24,6 +24,8 @@
  * [CMake](http://www.cmake.org/cmake/resources/software.html)
  * [Doxygen](http://www.stack.nl/~dimitri/doxygen/download.html#latestsrc)
  * [Graphviz](http://www.graphviz.org/Download_windows.php)
+ * [Git](http://code.google.com/p/msysgit/downloads/list) -
+   нужен _Full installer for official Git For Windows_
  * Какой-нибудь компилятор, например [MinGW](http://www.mingw.org/wiki/Getting_Started)
 
 # Сборка
